@@ -1,0 +1,157 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: reviewinsights_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+          
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+        
+    - name: Get pnpm store directory
+      id: pnpm-cache
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+        
+    - uses: actions/cache@v3
+      name: Setup pnpm cache
+      with:
+        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+          
+    - name: Install dependencies
+      run: pnpm install
+      
+    - name: Run linter
+      run: pnpm lint
+      
+    - name: Run type checking
+      run: pnpm typecheck
+      
+    - name: Run tests
+      run: pnpm test
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/reviewinsights_test
+        REDIS_URL: redis://localhost:6379
+        JWT_SECRET: test-secret
+        NODE_ENV: test
+        
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+        
+    - name: Install dependencies
+      run: pnpm install
+      
+    - name: Build packages
+      run: pnpm build
+      
+    - name: Build Docker image
+      run: docker build -t review-insights:${{ github.sha }} .
+      
+    - name: Save Docker image
+      run: docker save review-insights:${{ github.sha }} > review-insights.tar
+      
+    - name: Upload Docker image
+      uses: actions/upload-artifact@v3
+      with:
+        name: docker-image
+        path: review-insights.tar
+        
+  deploy-demo:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Deploy to Railway
+      if: env.RAILWAY_TOKEN != ''
+      uses: railwayapp/deploy-action@v1
+      with:
+        token: ${{ secrets.RAILWAY_TOKEN }}
+        service: review-insights-demo
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        
+    - name: Deploy to Render
+      if: env.RENDER_API_KEY != ''
+      run: |
+        curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"clearCache": true}'
+      env:
+        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        
+    - name: Deploy to Vercel
+      if: env.VERCEL_TOKEN != ''
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod'
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

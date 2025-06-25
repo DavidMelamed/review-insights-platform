@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String      @id @default(cuid())
+  email             String      @unique
+  password          String
+  name              String?
+  company           String?
+  emailVerified     Boolean     @default(false)
+  verificationToken String?
+  resetToken        String?
+  resetTokenExpiry  DateTime?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  subscription      Subscription?
+  collections       ReviewCollection[]
+  reports           Report[]
+  apiKeys           ApiKey[]
+  usageRecords      UsageRecord[]
+}
+
+model Subscription {
+  id                String      @id @default(cuid())
+  userId            String      @unique
+  stripeCustomerId  String      @unique
+  stripePriceId     String
+  stripeStatus      String
+  plan              PlanType
+  currentPeriodEnd  DateTime
+  cancelAtPeriodEnd Boolean     @default(false)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ApiKey {
+  id                String      @id @default(cuid())
+  userId            String
+  key               String      @unique
+  name              String
+  lastUsed          DateTime?
+  expiresAt         DateTime?
+  createdAt         DateTime    @default(now())
+
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ReviewCollection {
+  id                String      @id @default(cuid())
+  userId            String
+  businessName      String
+  location          String?
+  sources           String[]
+  status            CollectionStatus
+  includeCompetitors Boolean    @default(false)
+  requestedDepth    Int         @default(100)
+  completedAt       DateTime?
+  error             String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviews           Review[]
+  reports           Report[]
+}
+
+model Review {
+  id                String      @id @default(cuid())
+  collectionId      String
+  reviewId          String
+  author            String
+  rating            Float
+  title             String?
+  content           String      @db.Text
+  date              DateTime
+  verified          Boolean     @default(false)
+  helpful           Int?
+  source            String
+  url               String?
+  sentimentScore    Float?
+  sentimentLabel    String?
+  metadata          Json?
+  createdAt         DateTime    @default(now())
+
+  collection        ReviewCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  citations         Citation[]
+}
+
+model Report {
+  id                String      @id @default(cuid())
+  userId            String
+  collectionId      String
+  title             String
+  status            ReportStatus
+  brandConfig       Json
+  data              Json
+  insights          Json[]
+  recommendations   Json[]
+  pdfUrl            String?
+  completedAt       DateTime?
+  error             String?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collection        ReviewCollection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  citations         Citation[]
+  prompts           GeneratedPrompt[]
+}
+
+model Citation {
+  id                String      @id @default(cuid())
+  reportId          String
+  reviewId          String
+  content           String      @db.Text
+  pageNumber        Int?
+  createdAt         DateTime    @default(now())
+
+  report            Report      @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  review            Review      @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+}
+
+model GeneratedPrompt {
+  id                String      @id @default(cuid())
+  reportId          String
+  templateId        String
+  purpose           String
+  prompt            String      @db.Text
+  category          String
+  metadata          Json
+  createdAt         DateTime    @default(now())
+
+  report            Report      @relation(fields: [reportId], references: [id], onDelete: Cascade)
+}
+
+model UsageRecord {
+  id                String      @id @default(cuid())
+  userId            String
+  action            String
+  credits           Int
+  metadata          Json?
+  createdAt         DateTime    @default(now())
+
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum PlanType {
+  FREE
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum CollectionStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ReportStatus {
+  PENDING
+  GENERATING
+  COMPLETED
+  FAILED
+}

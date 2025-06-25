@@ -1,0 +1,70 @@
+services:
+  # Web service for the frontend
+  - type: web
+    name: review-insights-web
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install && pnpm build:frontend
+    startCommand: cd packages/frontend && pnpm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: https://review-insights-api.onrender.com
+    
+  # API service
+  - type: web
+    name: review-insights-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install && pnpm build:api
+    startCommand: cd packages/api && pnpm start:prod
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: review-insights-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: review-insights-redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@localhost
+      - key: ADMIN_PASSWORD
+        generateValue: true
+      - key: OPENAI_API_KEY
+        sync: false # User will add this manually
+
+  # Background worker
+  - type: worker
+    name: review-insights-worker
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install && pnpm build
+    startCommand: cd packages/api && pnpm worker
+    envVars:
+      - fromGroup: review-insights-api
+
+# Databases
+databases:
+  - name: review-insights-db
+    region: oregon
+    plan: free
+    databaseName: reviewinsights
+    user: reviewinsights
+
+# Redis
+services:
+  - type: redis
+    name: review-insights-redis
+    region: oregon
+    plan: free
+    maxMemoryPolicy: allkeys-lru

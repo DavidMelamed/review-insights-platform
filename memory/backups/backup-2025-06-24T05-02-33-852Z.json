@@ -1,0 +1,122 @@
+{
+  "timestamp": "2025-06-24T05:02:33.852Z",
+  "version": "1.0",
+  "entries": [
+    {
+      "id": "entry_mca2769m_of1hng7un",
+      "key": "system_architecture",
+      "value": {
+        "services": {
+          "api_gateway": {
+            "port": 3000,
+            "tech": "Express + TypeScript"
+          },
+          "review_collector": {
+            "port": 3001,
+            "tech": "Node.js + Puppeteer"
+          },
+          "nlp_engine": {
+            "port": 3002,
+            "tech": "Python + FastAPI"
+          },
+          "report_generator": {
+            "port": 3003,
+            "tech": "Node.js + PDFKit"
+          },
+          "frontend": {
+            "port": 3004,
+            "tech": "Next.js + React"
+          }
+        },
+        "databases": {
+          "primary": "PostgreSQL",
+          "cache": "Redis",
+          "queue": "Bull + Redis"
+        }
+      },
+      "type": "object",
+      "namespace": "default",
+      "tags": [],
+      "metadata": {},
+      "owner": "system",
+      "accessLevel": "shared",
+      "createdAt": "2025-06-24T05:02:33.850Z",
+      "updatedAt": "2025-06-24T05:02:33.850Z",
+      "lastAccessedAt": "2025-06-24T05:02:33.850Z",
+      "version": 1,
+      "size": 401,
+      "compressed": false,
+      "checksum": "3d35ddbbade7e043fc62222da355a3819b8c20911b73e2f522945804ff155ead",
+      "references": [],
+      "dependencies": []
+    }
+  ],
+  "statistics": {
+    "overview": {
+      "totalEntries": 1,
+      "totalSize": 401,
+      "compressedEntries": 0,
+      "compressionRatio": 1,
+      "indexSize": 50,
+      "memoryUsage": 6865008,
+      "diskUsage": 0
+    },
+    "distribution": {
+      "byNamespace": {
+        "default": {
+          "count": 1,
+          "size": 401
+        }
+      },
+      "byType": {
+        "object": {
+          "count": 1,
+          "size": 401
+        }
+      },
+      "byOwner": {
+        "system": {
+          "count": 1,
+          "size": 401
+        }
+      },
+      "byAccessLevel": {
+        "shared": {
+          "count": 1,
+          "size": 401
+        }
+      }
+    },
+    "temporal": {
+      "entriesCreatedLast24h": 1,
+      "entriesUpdatedLast24h": 1,
+      "entriesAccessedLast24h": 1,
+      "oldestEntry": "2025-06-24T05:02:33.850Z",
+      "newestEntry": "2025-06-24T05:02:33.850Z"
+    },
+    "performance": {
+      "averageQueryTime": 0,
+      "averageWriteTime": 1,
+      "cacheHitRatio": 0,
+      "indexEfficiency": 0.95
+    },
+    "health": {
+      "expiredEntries": 0,
+      "orphanedReferences": 0,
+      "duplicateKeys": 0,
+      "corruptedEntries": 0,
+      "recommendedCleanup": false
+    },
+    "optimization": {
+      "suggestions": [],
+      "potentialSavings": {
+        "compression": 0,
+        "cleanup": 0,
+        "deduplication": 0
+      },
+      "indexOptimization": [
+        "Consider periodic index rebuilding for optimal performance"
+      ]
+    }
+  }
+}

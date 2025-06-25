@@ -1,0 +1,30 @@
+{
+  "name": "@review-analysis/report-generator",
+  "version": "1.0.0",
+  "description": "Report generation engine for review analysis",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -b",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "test": "vitest",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@review-analysis/nlp-engine": "workspace:*",
+    "pdfkit": "^0.14.0",
+    "chart.js": "^4.4.1",
+    "handlebars": "^4.7.8",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/pdfkit": "^0.13.3",
+    "tsx": "^4.7.0",
+    "vitest": "^1.2.0"
+  }
+}

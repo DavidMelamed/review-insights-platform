@@ -1,0 +1,71 @@
+{
+  "name": "Review Insights Platform",
+  "description": "AI-powered review management platform with zero-config setup",
+  "repository": "https://github.com/review-insights/platform",
+  "logo": "https://reviewinsights.ai/logo.png",
+  "keywords": ["ai", "reviews", "sentiment-analysis", "saas", "business-intelligence"],
+  "website": "https://reviewinsights.ai",
+  "success_url": "/onboarding",
+  "env": {
+    "NODE_ENV": {
+      "value": "production"
+    },
+    "ADMIN_EMAIL": {
+      "description": "Admin email for login",
+      "value": "admin@localhost"
+    },
+    "ADMIN_PASSWORD": {
+      "description": "Admin password (leave blank to auto-generate)",
+      "required": false,
+      "generator": "secret"
+    },
+    "JWT_SECRET": {
+      "description": "Secret for JWT tokens",
+      "generator": "secret"
+    },
+    "OPENAI_API_KEY": {
+      "description": "OpenAI API key for AI features (optional)",
+      "required": false
+    },
+    "DEMO_MODE": {
+      "description": "Run in demo mode without API keys",
+      "value": "true"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "image": "heroku/nodejs",
+  "addons": [
+    {
+      "plan": "heroku-postgresql:hobby-dev",
+      "as": "DATABASE"
+    },
+    {
+      "plan": "heroku-redis:hobby-dev",
+      "as": "REDIS"
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "scripts": {
+    "postdeploy": "pnpm install && pnpm build && pnpm migrate && pnpm seed"
+  },
+  "environments": {
+    "review": {
+      "scripts": {
+        "postdeploy": "pnpm migrate"
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "version": "1.0.72",
+  "project": {
+    "name": "review-analysis-saas",
+    "type": "claude-flow",
+    "created": "2025-06-24T04:16:33.797Z"
+  },
+  "features": {
+    "swarm": true,
+    "sparc": true,
+    "memory": true,
+    "terminal": true,
+    "mcp": true
+  }
+}

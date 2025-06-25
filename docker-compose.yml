@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: review-insights-db
+    environment:
+      POSTGRES_USER: ${DB_USER:-reviewai}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secretpassword}
+      POSTGRES_DB: ${DB_NAME:-review_insights}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-reviewai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: review-insights-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./packages/api
+      dockerfile: Dockerfile
+    container_name: review-insights-api
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${DB_USER:-reviewai}:${DB_PASSWORD:-secretpassword}@postgres:5432/${DB_NAME:-review_insights}
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      DATAFORSEO_LOGIN: ${DATAFORSEO_LOGIN}
+      DATAFORSEO_PASSWORD: ${DATAFORSEO_PASSWORD}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3004}
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./packages/api:/app
+      - /app/node_modules
+    command: sh -c "pnpm prisma migrate deploy && pnpm start"
+
+  frontend:
+    build:
+      context: ./packages/frontend
+      dockerfile: Dockerfile
+    container_name: review-insights-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: ${API_URL:-http://localhost:3000}
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY}
+    ports:
+      - "3004:3004"
+    depends_on:
+      - api
+    volumes:
+      - ./packages/frontend:/app
+      - /app/node_modules
+      - /app/.next
+
+  worker:
+    build:
+      context: ./packages/api
+      dockerfile: Dockerfile
+    container_name: review-insights-worker
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${DB_USER:-reviewai}:${DB_PASSWORD:-secretpassword}@postgres:5432/${DB_NAME:-review_insights}
+      REDIS_URL: redis://redis:6379
+      DATAFORSEO_LOGIN: ${DATAFORSEO_LOGIN}
+      DATAFORSEO_PASSWORD: ${DATAFORSEO_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./packages/api:/app
+      - /app/node_modules
+    command: pnpm run worker
+
+  nginx:
+    image: nginx:alpine
+    container_name: review-insights-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - api
+      - frontend
+
+volumes:
+  postgres_data:
+  redis_data:

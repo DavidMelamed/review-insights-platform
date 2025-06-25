@@ -1,0 +1,49 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "pnpm install && pnpm build"
+
+[deploy]
+startCommand = "pnpm start:prod"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[[services]]
+name = "review-insights"
+port = 3000
+
+[services.review-insights]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 30
+
+[[services]]
+name = "api"
+port = 3001
+
+[services.api]
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+
+[[databases]]
+name = "postgres"
+plugin = "postgresql"
+
+[[databases]]
+name = "redis"
+plugin = "redis"
+
+[env]
+NODE_ENV = "production"
+DATABASE_URL = "${{POSTGRES_URL}}"
+REDIS_URL = "${{REDIS_URL}}"
+ADMIN_EMAIL = "admin@localhost"
+ADMIN_PASSWORD = "${{SECRET_ADMIN_PASSWORD}}"
+JWT_SECRET = "${{SECRET_JWT_SECRET}}"
+OPENAI_API_KEY = "${{OPENAI_API_KEY}}"
+
+[secrets]
+ADMIN_PASSWORD = { generate = "password", length = 16 }
+JWT_SECRET = { generate = "hex", length = 32 }
+
+[volumes]
+uploads = { mount = "/app/uploads", size = "10Gi" }
+data = { mount = "/app/data", size = "5Gi" }

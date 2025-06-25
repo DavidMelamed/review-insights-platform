@@ -1,0 +1,60 @@
+name: Deploy Demo Instance
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy-demo:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 8
+        
+    - name: Install dependencies
+      run: pnpm install
+      
+    - name: Build application
+      run: pnpm build
+      
+    - name: Deploy to Railway
+      if: github.ref == 'refs/heads/main'
+      uses: railwayapp/deploy-action@v1
+      with:
+        token: ${{ secrets.RAILWAY_TOKEN }}
+        service: review-insights-demo
+        
+    - name: Deploy to Render
+      if: github.ref == 'refs/heads/main'
+      run: |
+        curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"clearCache": true}'
+          
+    - name: Deploy to Vercel
+      if: github.ref == 'refs/heads/main'
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        vercel-args: '--prod'
+        
+    - name: Update demo status
+      run: |
+        echo "Demo deployed successfully!"
+        echo "Railway: https://review-insights-demo.railway.app"
+        echo "Render: https://review-insights-demo.onrender.com"
+        echo "Vercel: https://review-insights-demo.vercel.app"

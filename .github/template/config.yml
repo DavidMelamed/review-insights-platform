@@ -1,0 +1,68 @@
+# GitHub Template Repository Configuration
+# This makes the repository a template that can be used with "Use this template" button
+
+name: Review Insights Platform
+description: AI-powered review management platform with zero-config setup
+topics:
+  - review-management
+  - ai
+  - saas
+  - typescript
+  - nextjs
+  - sentiment-analysis
+  - business-intelligence
+
+# Template repository settings
+include_all_branches: false
+use_squash_pr_title_as_default: true
+
+# Quick start instructions shown when using template
+quick_start: |
+  # 🚀 Review Insights - Quick Start
+  
+  You've just created your own Review Insights platform! Here's how to deploy it:
+  
+  ## Option 1: One-Click Deploy (Recommended)
+  
+  ### Deploy to Railway (30 seconds)
+  [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/$GITHUB_USER/$GITHUB_REPO)
+  
+  ### Deploy to Render (1 minute)
+  [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/$GITHUB_USER/$GITHUB_REPO)
+  
+  ### Deploy to Vercel (30 seconds)
+  [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/$GITHUB_USER/$GITHUB_REPO)
+  
+  ## Option 2: Local Development
+  
+  ```bash
+  # Clone your new repository
+  git clone https://github.com/$GITHUB_USER/$GITHUB_REPO.git
+  cd $GITHUB_REPO
+  
+  # Run the quick deploy script
+  ./quick-deploy.sh
+  ```
+  
+  ## Option 3: Manual Setup
+  
+  1. Install dependencies: `pnpm install`
+  2. Copy `.env.example` to `.env`
+  3. Run migrations: `pnpm migrate`
+  4. Start development: `pnpm dev`
+  
+  ## 📚 Resources
+  
+  - [Documentation](https://docs.reviewinsights.ai)
+  - [Video Tutorial](https://youtube.com/watch?v=review-insights-setup)
+  - [Support](https://github.com/$GITHUB_USER/$GITHUB_REPO/issues)
+  
+  ## 🎯 Next Steps
+  
+  1. Deploy your platform (see options above)
+  2. Access the platform and login with generated credentials
+  3. Try the AI setup - just enter a business name!
+  4. Customize with your branding
+  5. Add API keys for production features
+  
+  Happy reviewing! 🎉

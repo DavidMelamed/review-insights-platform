@@ -1,0 +1,48 @@
+{
+  "name": "@review-insights/mobile-sdk",
+  "version": "1.0.0",
+  "description": "React Native SDK for Review Insights - Collect and analyze reviews on mobile",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "lint": "eslint src --ext .ts,.tsx",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react-native",
+    "reviews",
+    "analytics",
+    "sdk",
+    "mobile"
+  ],
+  "author": "Review Insights",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-native": ">=0.60.0"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.19.3",
+    "@react-native-community/netinfo": "^9.4.1",
+    "react-native-device-info": "^10.11.0",
+    "react-native-geolocation-service": "^5.3.1",
+    "react-native-permissions": "^3.10.1",
+    "react-native-push-notification": "^8.1.1",
+    "react-native-rate": "^1.2.12",
+    "react-native-share": "^10.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-native": "^0.72.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "eslint-plugin-react-native": "^4.0.0",
+    "jest": "^29.0.0",
+    "typescript": "^5.0.0"
+  }
+}

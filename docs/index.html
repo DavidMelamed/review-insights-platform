@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy Review Insights - Zero Setup Required!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+        
+        .feature-list {
+            text-align: left;
+            margin: 2rem 0;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+        
+        .feature-list li {
+            margin: 0.5rem 0;
+            list-style: none;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .feature-list li:before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+        
+        .deploy-section {
+            margin: 3rem 0;
+        }
+        
+        .deploy-option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .deploy-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.1);
+        }
+        
+        .deploy-btn {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 1rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .deploy-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .demo-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-size: 1.2rem;
+            padding: 1.2rem 3rem;
+        }
+        
+        .time-label {
+            display: inline-block;
+            background: #e9ecef;
+            color: #666;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .free-label {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .divider {
+            height: 1px;
+            background: #e9ecef;
+            margin: 2rem 0;
+        }
+        
+        .footer {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Review Insights</h1>
+        <p class="subtitle">Deploy the AI-powered review management platform in seconds!</p>
+        
+        <div class="feature-list">
+            <li>Zero-config AI setup - just enter business name</li>
+            <li>Multi-platform review collection (Google, Yelp, etc.)</li>
+            <li>Real-time sentiment analysis & alerts</li>
+            <li>AI-generated response suggestions</li>
+            <li>Beautiful reports with your branding</li>
+            <li>Industry benchmarking & insights</li>
+        </div>
+        
+        <div class="deploy-section">
+            <h2>🚀 Try Demo First (No signup required!)</h2>
+            
+            <div class="deploy-option">
+                <span class="time-label free-label">Instant • Free • No Signup</span>
+                <h3>Live Demo Instance</h3>
+                <p>Experience Review Insights immediately with sample data</p>
+                <a href="https://demo.reviewinsights.ai" class="deploy-btn demo-btn">
+                    Open Live Demo →
+                </a>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="deploy-section">
+            <h2>☁️ Deploy Your Own (One-Click!)</h2>
+            
+            <div class="deploy-option">
+                <span class="time-label free-label">30 seconds • Free tier</span>
+                <h3>Deploy to Railway</h3>
+                <p>$5 free credit, automatic SSL, custom domains</p>
+                <a href="https://railway.app/new/template/review-insights?referralCode=claude" 
+                   class="deploy-btn">
+                    Deploy on Railway →
+                </a>
+            </div>
+            
+            <div class="deploy-option">
+                <span class="time-label free-label">1 minute • Free forever</span>
+                <h3>Deploy to Render</h3>
+                <p>Free tier available, automatic deploys from GitHub</p>
+                <a href="https://render.com/deploy?repo=https://github.com/review-insights/platform" 
+                   class="deploy-btn">
+                    Deploy on Render →
+                </a>
+            </div>
+            
+            <div class="deploy-option">
+                <span class="time-label">2 minutes • $200 credit</span>
+                <h3>Deploy to DigitalOcean</h3>
+                <p>Production-ready, scalable, $200 credit for new users</p>
+                <a href="https://cloud.digitalocean.com/apps/new?repo=https://github.com/review-insights/platform" 
+                   class="deploy-btn">
+                    Deploy on DigitalOcean →
+                </a>
+            </div>
+            
+            <div class="deploy-option">
+                <span class="time-label free-label">30 seconds • Free tier</span>
+                <h3>Deploy to Vercel</h3>
+                <p>Frontend + API, automatic SSL, global CDN</p>
+                <a href="https://vercel.com/new/clone?repository-url=https://github.com/review-insights/platform&env=OPENAI_API_KEY&envDescription=Optional%20OpenAI%20API%20key%20for%20AI%20features&project-name=review-insights" 
+                   class="deploy-btn">
+                    Deploy on Vercel →
+                </a>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="deploy-section">
+            <h2>🖥️ Or Install Locally</h2>
+            
+            <div class="deploy-option">
+                <span class="time-label">5 minutes</span>
+                <h3>One-Line Install</h3>
+                <p>Automated setup for Mac, Linux, Windows (WSL)</p>
+                <code style="background: #333; color: #fff; padding: 1rem; border-radius: 5px; display: block; margin: 1rem 0;">
+                    curl -fsSL https://get.reviewinsights.ai | bash
+                </code>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Need help? Check out the <a href="https://docs.reviewinsights.ai">documentation</a> or <a href="https://github.com/review-insights/platform">GitHub repo</a></p>
+        </div>
+    </div>
+    
+    <script>
+        // Track deployment clicks
+        document.querySelectorAll('.deploy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const platform = e.target.textContent.trim();
+                console.log('Deploy clicked:', platform);
+                // Analytics would go here
+            });
+        });
+    </script>
+</body>
+</html>
