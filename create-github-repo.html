@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Review Insights Repository</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f6f8fa;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #24292e;
+            margin-bottom: 1rem;
+        }
+        
+        .step {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f6f8fa;
+            border-radius: 6px;
+            border: 1px solid #e1e4e8;
+        }
+        
+        .step h2 {
+            color: #0366d6;
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+        
+        input, button {
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e1e4e8;
+        }
+        
+        input {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+        
+        button {
+            background: #2ea44f;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        
+        button:hover {
+            background: #2c974b;
+        }
+        
+        .code {
+            background: #f6f8fa;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border: 1px solid #e1e4e8;
+        }
+        
+        .success {
+            background: #f0fff4;
+            border: 1px solid #34d058;
+            color: #22863a;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+        
+        .error {
+            background: #ffeef0;
+            border: 1px solid #f97583;
+            color: #d73a49;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+        
+        .link {
+            color: #0366d6;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .link:hover {
+            text-decoration: underline;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .url-list {
+            background: #f6f8fa;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+        
+        .url-list li {
+            margin: 0.5rem 0;
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Create Your Review Insights Repository</h1>
+        <p>This tool will help you create and set up your GitHub repository with one click!</p>
+        
+        <div class="step">
+            <h2>Step 1: Enter Your GitHub Username</h2>
+            <input type="text" id="username" placeholder="Your GitHub username" autofocus>
+            <button onclick="generateCommands()">Generate Setup Commands</button>
+        </div>
+        
+        <div id="step2" class="step hidden">
+            <h2>Step 2: Create Repository on GitHub</h2>
+            <p>Click the button below to create your repository:</p>
+            <a id="createRepoLink" href="#" target="_blank" class="link">
+                <button>Create Repository on GitHub →</button>
+            </a>
+            <p style="margin-top: 1rem; color: #666;">
+                <small>This will open GitHub's new repository page with everything pre-filled. 
+                Just click "Create repository" on that page.</small>
+            </p>
+        </div>
+        
+        <div id="step3" class="step hidden">
+            <h2>Step 3: Push Your Code</h2>
+            <p>Run these commands in your terminal:</p>
+            <div class="code" id="pushCommands"></div>
+            <button onclick="copyCommands()">Copy Commands</button>
+        </div>
+        
+        <div id="step4" class="step hidden">
+            <h2>Step 4: Complete Setup</h2>
+            <p>Your repository is now live! Here are your important URLs:</p>
+            <div class="url-list">
+                <ul>
+                    <li>📁 Repository: <a id="repoUrl" href="#" target="_blank" class="link"></a></li>
+                    <li>📄 Deploy Page: <a id="deployPageUrl" href="#" target="_blank" class="link"></a></li>
+                    <li>⚙️ Settings: <a id="settingsUrl" href="#" target="_blank" class="link"></a></li>
+                    <li>📊 Pages Settings: <a id="pagesUrl" href="#" target="_blank" class="link"></a></li>
+                </ul>
+            </div>
+            
+            <h3 style="margin-top: 2rem;">Final Steps:</h3>
+            <ol style="margin-left: 2rem;">
+                <li>Go to <a id="pagesUrl2" href="#" target="_blank" class="link">Pages Settings</a></li>
+                <li>Set Source: Deploy from branch</li>
+                <li>Set Branch: gh-pages → /docs</li>
+                <li>Click Save</li>
+            </ol>
+            
+            <div class="success" style="margin-top: 2rem;">
+                <strong>🎉 Congratulations!</strong><br>
+                Your Review Insights platform is now live on GitHub!
+            </div>
+        </div>
+        
+        <div id="deployButtons" class="step hidden">
+            <h2>One-Click Deploy URLs</h2>
+            <p>Share these with others to let them deploy your platform:</p>
+            <div class="url-list">
+                <ul>
+                    <li>🚊 Railway: <code id="railwayUrl"></code></li>
+                    <li>🎨 Render: <code id="renderUrl"></code></li>
+                    <li>▲ Vercel: <code id="vercelUrl"></code></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function generateCommands() {
+            const username = document.getElementById('username').value.trim();
+            if (!username) {
+                alert('Please enter your GitHub username');
+                return;
+            }
+            
+            const repoName = 'review-insights-platform';
+            const repoUrl = `https://github.com/${username}/${repoName}`;
+            
+            // Show step 2
+            document.getElementById('step2').classList.remove('hidden');
+            const createLink = `https://github.com/new?name=${repoName}&description=AI-powered+review+management+platform+with+zero-config+setup&visibility=public`;
+            document.getElementById('createRepoLink').href = createLink;
+            
+            // Show step 3
+            document.getElementById('step3').classList.remove('hidden');
+            const commands = `cd /home/david/review-analysis-saas
+git remote add origin https://github.com/${username}/${repoName}.git
+git push -u origin main
+git push origin gh-pages`;
+            document.getElementById('pushCommands').textContent = commands;
+            
+            // Show step 4
+            document.getElementById('step4').classList.remove('hidden');
+            document.getElementById('repoUrl').href = repoUrl;
+            document.getElementById('repoUrl').textContent = repoUrl;
+            
+            const deployPageUrl = `https://${username}.github.io/${repoName}/`;
+            document.getElementById('deployPageUrl').href = deployPageUrl;
+            document.getElementById('deployPageUrl').textContent = deployPageUrl;
+            
+            const settingsUrl = `${repoUrl}/settings`;
+            document.getElementById('settingsUrl').href = settingsUrl;
+            document.getElementById('settingsUrl').textContent = 'Repository Settings';
+            
+            const pagesUrl = `${repoUrl}/settings/pages`;
+            document.getElementById('pagesUrl').href = pagesUrl;
+            document.getElementById('pagesUrl').textContent = 'Pages Settings';
+            document.getElementById('pagesUrl2').href = pagesUrl;
+            
+            // Show deploy buttons
+            document.getElementById('deployButtons').classList.remove('hidden');
+            document.getElementById('railwayUrl').textContent = `https://railway.app/new/template?template=${repoUrl}`;
+            document.getElementById('renderUrl').textContent = `https://render.com/deploy?repo=${repoUrl}`;
+            document.getElementById('vercelUrl').textContent = `https://vercel.com/new/clone?repository-url=${repoUrl}`;
+            
+            // Smooth scroll to step 2
+            document.getElementById('step2').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function copyCommands() {
+            const commands = document.getElementById('pushCommands').textContent;
+            navigator.clipboard.writeText(commands).then(() => {
+                alert('Commands copied to clipboard!');
+            }).catch(() => {
+                alert('Please manually copy the commands');
+            });
+        }
+        
+        // Allow Enter key to submit
+        document.getElementById('username').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                generateCommands();
+            }
+        });
+    </script>
+</body>
+</html>
