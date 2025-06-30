@@ -1,3 +1,13 @@
+
+def validate_inputs(username, token):
+    """Validate required inputs"""
+    errors = []
+    if not username or username.strip() == "":
+        errors.append("Username cannot be empty")
+    if not token or token.strip() == "":
+        errors.append("Token cannot be empty")
+    return errors
+
 #!/usr/bin/env python3
 """
 GitHub Repository Creator for Review Insights
